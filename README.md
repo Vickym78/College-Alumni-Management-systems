@@ -41,8 +41,3 @@ The **Alumni Management System** includes two primary components: the **Admin Si
 ## ⚙️ **Setup Instructions**
 1. Start the frontend server: `npm run dev` (inside the **frontend** folder).
 2. Start the backend server: `npm start` (inside the **server** folder).
-
-## 🤝 **Contributing**
-Contributions are welcome! Feel free to open an issue or submit a pull request with any improvements, bug fixes, or new features.
-
-Thank you for using the Alumni Management System! If you have any questions or need assistance, please don't hesitate to contact us.
