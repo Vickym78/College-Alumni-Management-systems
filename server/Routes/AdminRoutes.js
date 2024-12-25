@@ -23,13 +23,15 @@ const avatarUpload = multer({ storage: avatarStorage });
 
 const galleryStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'Public/Images');
+        cb(null, 'Public/Images'); // Destination folder for uploaded images
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname);
+        cb(null, file.originalname); // Original file name is used for saving
     }
 });
+
 const galleryUpload = multer({ storage: galleryStorage });
+
 
 
 // app.use(express.static('Public'));
@@ -511,20 +513,37 @@ router.get("/gallery", (req, res) => {
     });
 });
 
+router.post('/gallery', galleryUpload.single('image'), (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
 
-// router.post('/gallery', upload.single('image'), (req, res) => {
-//     const { about } = req.body;
-//     const imagePath = req.file.path;
+        const { about } = req.body;
+        const imagePath = req.file.path;
 
-//     con.query('INSERT INTO gallery (image_path, about) VALUES (?, ?)', [imagePath, about], (err, result) => {
-//         if (err) {
-//             console.error('Error inserting into gallery:', err);
-//             res.status(500).json({ error: 'An error occurred' });
-//             return;
-//         }
-//         res.json({ message: 'Image uploaded successfully' });
-//     });
-// });
+        con.query(
+            'INSERT INTO `gallery` (`id`, `image_path`, `about`, `created`) VALUES (NULL, ?, ?, NOW())',
+            [imagePath, about],
+            (err, result) => {
+                if (err) {
+                    console.error('Database Error:', err);
+                    return res.status(500).json({ error: 'Database insertion failed' });
+                }
+                res.json({
+                    message: 'Image uploaded successfully',
+                    id: result.insertId, // Return the inserted row ID
+                    imagePath,
+                    about,
+                });
+            }
+        );
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ error: 'An error occurred while processing the upload' });
+    }
+});
+
 
 router.delete('/gallery/:id', (req, res) => {
     const id = req.params.id;
@@ -538,7 +557,7 @@ router.delete('/gallery/:id', (req, res) => {
         res.json({ message: 'Image deleted successfully' });
     });
 });
-
+/*
 router.post('/gallery', galleryUpload.single('image'), (req, res) => {
     try {
         const imagePath = req.file.path;
@@ -558,7 +577,7 @@ router.post('/gallery', galleryUpload.single('image'), (req, res) => {
         res.status(500).json({ error: 'An error occurred' });
     }
 });
-
+*/
 router.get("/alumni", (req, res) => {
     const sql = "SELECT a.*,c.course,a.name as name from alumnus_bio a inner join courses c on c.id = a.course_id order by a.name asc";
     con.query(sql, (err, result) => {

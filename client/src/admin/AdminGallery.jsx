@@ -47,7 +47,7 @@ const AdminGallery = () => {
       console.error('Error:', error);
     }
   };
-
+    
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`${baseUrl}auth/gallery/${id}`);
