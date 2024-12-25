@@ -5,6 +5,9 @@ import multer from "multer";
 import path from "path";
 import bcrypt from "bcrypt";
 import sendEmail from "../utils/mailer.js";
+import validator from "email-validator"; // Use email-validator for format validation
+import dns from "dns"; // Use DNS to check domain existenc
+
 
 const router = express.Router();
 
@@ -57,7 +60,7 @@ router.post("/login", (req, res) => {
         }
     })
 })
-
+/*
 router.post("/signup", async (req, res) => {
     const { name, email, password, userType, course_id } = req.body;
     try {
@@ -107,6 +110,75 @@ router.post("/signup", async (req, res) => {
     }
 });
 
+
+*/ 
+
+// updated sequre accound security  sign up 
+router.post("/signup", (req, res) => {
+    const { name, email, password, userType, course_id } = req.body;
+
+    // Validate email format
+    if (!validator.validate(email)) {
+        return res.status(400).json({ error: "Invalid email format" });
+    }
+
+    // Check if email domain exists
+    const domain = email.split("@")[1];
+    dns.resolveMx(domain, async (err, addresses) => {
+        if (err || addresses.length === 0) {
+            return res.status(400).json({ error: "Email domain does not exist" });
+        }
+
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
+            const sql = "SELECT * FROM users WHERE email = ?";
+            con.query(sql, [email], (err, result) => {
+                if (err) {
+                    console.error("Query Error:", err);
+                    return res.status(500).json({ error: "Database Query Error" });
+                }
+
+                if (result.length > 0) {
+                    return res.status(400).json({ error: "Email already exists" });
+                } else {
+                    if (userType === "alumnus") {
+                        // Insert into alumnus_bio table
+                        const alumnusSql = "INSERT INTO alumnus_bio(name, email, course_id) VALUES(?, ?, ?)";
+                        con.query(alumnusSql, [name, email, course_id], (alumnusErr, alumnusResult) => {
+                            if (alumnusErr) {
+                                console.error("Alumnus Bio Query Error:", alumnusErr);
+                                return res.status(500).json({ error: "Alumnus Bio Query Error" });
+                            }
+
+                            const alumnusId = alumnusResult.insertId;
+                            const userSql = "INSERT INTO users(name, email, password, type, alumnus_id) VALUES(?, ?, ?, ?, ?)";
+                            con.query(userSql, [name, email, hashedPassword, userType, alumnusId], (userErr, userResult) => {
+                                if (userErr) {
+                                    console.error("User Query Error:", userErr);
+                                    return res.status(500).json({ error: "User Query Error" });
+                                }
+                                return res.status(201).json({ message: "Signup Successful", userId: userResult.insertId });
+                            });
+                        });
+                    } else {
+                        const userSql = "INSERT INTO users(name, email, password, type) VALUES(?, ?, ?, ?)";
+                        con.query(userSql, [name, email, hashedPassword, userType], (err, result) => {
+                            if (err) {
+                                console.error("User Query Error:", err);
+                                return res.status(500).json({ error: "User Query Error" });
+                            }
+                            return res.status(201).json({ message: "Signup Successful", userId: result.insertId });
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error hashing password:", error);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+    });
+});
 
 
 router.post("/logout", (req, res) => {
