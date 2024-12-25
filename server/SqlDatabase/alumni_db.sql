@@ -228,8 +228,24 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `type`, `auto_generated_
 (1, 'Vicky Mahato', 'admin@gmail.com', '$2b$10$T3AaDtVF15J2PvFAEOrKge0b6/gWShoQnqoN0gz8MLkyQSUJHqyIC', 'admin', '', 0),
 (2, 'Pulkit Sharma', 'alumnus@gmail.com', '$2b$10$KP.4g9uiF9kvTQGgRUhym.d7G8CANbljBJVNs9syiaGBT.tllzS3m', 'alumnus', '', 1);
 
---
--- Indexes for dumped tables
+-- Create the achievements table
+CREATE TABLE `achievements` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `alumnus_id` INT(30) NOT NULL,
+  `date_achieved` DATE NOT NULL,
+  `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`alumnus_id`) REFERENCES `alumnus_bio`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Populate the achievements table
+INSERT INTO `achievements` (`title`, `description`, `alumnus_id`, `date_achieved`) VALUES
+('Best Innovator Award', 'Awarded for creating an innovative project at TechFest 2024', 1, '2024-03-15'),
+('Top Performer', 'Recognized as the top performer in the AIML course', 1, '2024-05-20'),
+('Community Contributor', 'Acknowledged for outstanding contributions to the alumni network', 1, '2024-06-10');
+
+
 --
 
 --

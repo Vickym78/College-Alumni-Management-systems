@@ -1,0 +1,161 @@
+/* Global Styles */
+body {
+    background-color: #f4f7fc;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Card Styling */
+.card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: scale(0.95);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    background-color: #fff;
+    animation: slideInUp 0.5s ease-out;
+    display: flex;
+    flex-direction: column; /* Ensure card content stacks vertically */
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+
+
+/* Card Content */
+.card-body {
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Add space between elements */
+    height: 100%;
+}
+
+.card-body h5 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: bold;
+    word-wrap: break-word; /* Prevent text from overflowing */
+}
+
+.card-body p {
+    font-size: 1rem;
+    color: #777;
+    line-height: 1.5;
+    text-overflow: ellipsis; /* Prevents text overflow and adds '...' if it's too long */
+    overflow: hidden;
+    white-space: nowrap; /* Prevents text from wrapping over multiple lines */
+}
+
+/* Hover Effect on Image */
+.card:hover .card-img-top {
+    opacity: 0.8;
+}
+
+/* Form Input Styling (revert to default form styles) */
+form {
+    padding: 30px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #5c6bc0;
+    border-color: #5c6bc0;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 15px;
+}
+
+.btn-primary:hover {
+    background-color: #3f51b5;
+    border-color: #3f51b5;
+    transform: translateY(-3px);
+}
+
+.btn-primary:active {
+    background-color: #283593;
+    border-color: #283593;
+    transform: translateY(1px);
+}
+
+/* Button Danger */
+.btn-danger {
+    background-color: #e57373;
+    border-color: #e57373;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+    transform: translateY(-3px);
+}
+
+.btn-danger:active {
+    background-color: #c62828;
+    border-color: #c62828;
+    transform: translateY(1px);
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.text-white {
+    color: white;
+}
+
+/* Gallery Container */
+
+.container-fluid.mt-3.pt-2 {
+    margin-top: 30px;
+    padding-top: 30px;
+}
+
+/* Gallery Grid */
+.row-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 20px;
+}
+
+.col-md-6 {
+    width: 48%;
+    margin-bottom: 30px;
+}
+
+.padzero {
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .col-md-6 {
+        width: 100%;
+    }
+}
